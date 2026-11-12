@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="todoApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AngularJS To-Do List</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body ng-controller="TodoController">
+  <!-- REGISTER / LOGIN -->
+  <div class="login-box" ng-show="!loggedIn">
+    <h1>To-Do List</h1>
+
+    <!-- REGISTER -->
+    <div ng-show="page == 'register'">
+      <h2>Create Account</h2>
+      <input
+        type="text"
+        ng-model="registerUsername"
+        placeholder="Create username"
+        ng-keyup="$event.keyCode === 13 && register()"
+      >
+      <input
+        type="password"
+        ng-model="registerPassword"
+        placeholder="Create password"
+        ng-keyup="$event.keyCode === 13 && register()"
+      >
+      <button type="button" ng-click="register()">Register</button>
+      <p class="error" ng-show="registerError">{{registerError}}</p>
+      <p class="switch-link">
+        Already have an account?
+        <a href="" ng-click="switchPage('login')">Login</a>
+      </p>
+    </div>
+
+    <!-- LOGIN -->
+    <div ng-show="page == 'login'">
+      <h2>Login</h2>
+      <p class="message" ng-show="registerMessage">{{registerMessage}}</p>
+      <input
+        type="text"
+        ng-model="loginUsername"
+        placeholder="Username"
+        ng-keyup="$event.keyCode === 13 && login()"
+      >
+      <input
+        type="password"
+        ng-model="loginPassword"
+        placeholder="Password"
+        ng-keyup="$event.keyCode === 13 && login()"
+      >
+      <button type="button" ng-click="login()">Login</button>
+      <p class="error" ng-show="loginMessage">{{loginMessage}}</p>
+      <p class="switch-link">
+        Don't have an account?
+        <a href="" ng-click="switchPage('register')">Register</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- TODO LIST -->
+  <div class="todo-box" ng-show="loggedIn">
+    <div class="header">
+      <div>
+        <h1>My To-Do List</h1>
+        <p>Welcome, {{currentUser}}!</p>
+      </div>
+      <button type="button" class="logout" ng-click="logout()">Logout</button>
+    </div>
+
+    <!-- ADD TASK -->
+    <div class="add-task">
+      <input
+        type="text"
+        ng-model="newTask"
+        placeholder="Enter a task"
+        ng-keyup="$event.keyCode === 13 && addTask()"
+      >
+      <button type="button" ng-click="addTask()">Add</button>
+    </div>
+
+    <!-- TASKS -->
+    <div class="task" ng-repeat="task in tasks track by $index">
+      <input
+        type="checkbox"
+        ng-model="task.completed"
+        ng-change="saveUsers()"
+      >
+      <span ng-class="{done: task.completed}">{{task.name}}</span>
+      <button type="button" class="delete" ng-click="deleteTask($index)">Delete</button>
+    </div>
+
+    <p class="empty-msg" ng-show="tasks.length == 0">No tasks available.</p>
+    <p class="stats" ng-show="tasks.length > 0">
+      Completed: {{getCompletedCount()}} / {{tasks.length}}
+    </p>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
+

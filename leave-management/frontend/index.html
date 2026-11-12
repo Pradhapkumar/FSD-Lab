@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Leave Management System</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      color: #222;
+      padding: 30px 16px;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 24px;
+      font-size: 26px;
+    }
+
+    .balance-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .balance-card {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .balance-card h3 {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .balance-card p {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .card {
+      background-color: white;
+      padding: 24px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      margin-bottom: 24px;
+    }
+
+    .card h2 {
+      font-size: 18px;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    .form-group textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #111;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      background-color: #333;
+    }
+
+    .status-msg {
+      margin-top: 12px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .status-msg.success {
+      color: #2e7d32;
+    }
+
+    .status-msg.error {
+      color: #c62828;
+    }
+
+    .list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .list-header h2 {
+      margin-bottom: 0;
+    }
+
+    .filter-select {
+      padding: 7px 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+
+    .leave-card {
+      background-color: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .leave-card h4 {
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .leave-card p {
+      font-size: 13px;
+      color: #444;
+      margin-bottom: 4px;
+    }
+
+    .empty {
+      color: #666;
+      font-size: 14px;
+      text-align: center;
+      padding: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Leave Management System</h1>
+
+    <div class="balance-grid">
+      <div class="balance-card">
+        <h3>Casual Leave</h3>
+        <p id="casualBalance">12 Days</p>
+      </div>
+      <div class="balance-card">
+        <h3>Medical Leave</h3>
+        <p id="medicalBalance">10 Days</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Apply for Leave</h2>
+      <form id="leaveForm">
+        <div class="form-group">
+          <label for="employeeName">Employee Name</label>
+          <input
+            type="text"
+            id="employeeName"
+            placeholder="Enter employee name"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="leaveType">Leave Type</label>
+          <select id="leaveType" required>
+            <option value="Casual Leave">Casual Leave</option>
+            <option value="Medical Leave">Medical Leave</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="startDate">Start Date</label>
+          <input type="date" id="startDate" required />
+        </div>
+
+        <div class="form-group">
+          <label for="endDate">End Date</label>
+          <input type="date" id="endDate" required />
+        </div>
+
+        <div class="form-group">
+          <label for="reason">Reason</label>
+          <textarea
+            id="reason"
+            placeholder="Enter reason"
+            required
+          ></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn">Apply Leave</button>
+        <p id="statusMsg" class="status-msg"></p>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="list-header">
+        <h2>Leave Applications</h2>
+        <select id="filterType" class="filter-select" onchange="loadLeaves()">
+          <option value="">All Leave Types</option>
+          <option value="Casual Leave">Casual Leave</option>
+          <option value="Medical Leave">Medical Leave</option>
+        </select>
+      </div>
+      <div id="leaveList"></div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "http://localhost:5000/api/leaves";
+    const BASE_CASUAL_DAYS = 12;
+    const BASE_MEDICAL_DAYS = 10;
+
+    function calculateDays(start, end) {
+      const s = new Date(start);
+      const e = new Date(end);
+      const diffMs = e.setHours(0, 0, 0, 0) - s.setHours(0, 0, 0, 0);
+      return Math.max(1, Math.round(diffMs / (1000 * 60 * 60 * 24)) + 1);
+    }
+
+    function updateBalances(leaves) {
+      let casualUsed = 0;
+      let medicalUsed = 0;
+
+      leaves.forEach(function (leave) {
+        const days = calculateDays(leave.startDate, leave.endDate);
+        if (leave.leaveType === "Casual Leave") {
+          casualUsed += days;
+        } else if (leave.leaveType === "Medical Leave") {
+          medicalUsed += days;
+        }
+      });
+
+      document.getElementById("casualBalance").textContent =
+        Math.max(0, BASE_CASUAL_DAYS - casualUsed) + " Days";
+      document.getElementById("medicalBalance").textContent =
+        Math.max(0, BASE_MEDICAL_DAYS - medicalUsed) + " Days";
+    }
+
+    function renderLeaves(leaves) {
+      const container = document.getElementById("leaveList");
+      container.innerHTML = "";
+
+      if (leaves.length === 0) {
+        const empty = document.createElement("p");
+        empty.className = "empty";
+        empty.textContent = "No leave applications found.";
+        container.appendChild(empty);
+        return;
+      }
+
+      leaves.forEach(function (leave) {
+        const card = document.createElement("div");
+        card.className = "leave-card";
+
+        const title = document.createElement("h4");
+        title.textContent = leave.employeeName;
+
+        const typeP = document.createElement("p");
+        typeP.textContent = "Leave Type: " + leave.leaveType;
+
+        const startP = document.createElement("p");
+        startP.textContent = "Start Date: " + new Date(leave.startDate).toLocaleDateString();
+
+        const endP = document.createElement("p");
+        endP.textContent = "End Date: " + new Date(leave.endDate).toLocaleDateString();
+
+        const reasonP = document.createElement("p");
+        reasonP.textContent = "Reason: " + leave.reason;
+
+        const statusP = document.createElement("p");
+        statusP.textContent = "Status: " + (leave.status || "Pending");
+
+        card.appendChild(title);
+        card.appendChild(typeP);
+        card.appendChild(startP);
+        card.appendChild(endP);
+        card.appendChild(reasonP);
+        card.appendChild(statusP);
+        container.appendChild(card);
+      });
+    }
+
+    async function loadLeaves() {
+      const filterType = document.getElementById("filterType").value;
+      const container = document.getElementById("leaveList");
+
+      try {
+        // Fetch all leaves to keep balances accurate, then apply optional filter
+        const allRes = await fetch(API_URL);
+        if (!allRes.ok) {
+          throw new Error("Failed to load leaves");
+        }
+        const allLeaves = await allRes.json();
+        updateBalances(allLeaves);
+
+        const displayed = filterType
+          ? allLeaves.filter(function (l) {
+              return l.leaveType === filterType;
+            })
+          : allLeaves;
+
+        renderLeaves(displayed);
+      } catch (err) {
+        container.innerHTML =
+          '<p class="empty">Unable to connect to backend API at ' + API_URL + ".</p>";
+      }
+    }
+
+    document.getElementById("leaveForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const statusMsg = document.getElementById("statusMsg");
+      statusMsg.textContent = "";
+      statusMsg.className = "status-msg";
+
+      const payload = {
+        employeeName: document.getElementById("employeeName").value.trim(),
+        leaveType: document.getElementById("leaveType").value,
+        startDate: document.getElementById("startDate").value,
+        endDate: document.getElementById("endDate").value,
+        reason: document.getElementById("reason").value.trim()
+      };
+
+      if (new Date(payload.endDate) < new Date(payload.startDate)) {
+        statusMsg.textContent = "End Date cannot be earlier than Start Date.";
+        statusMsg.classList.add("error");
+        return;
+      }
+
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          statusMsg.textContent = data.message || "Failed to apply leave.";
+          statusMsg.classList.add("error");
+          return;
+        }
+
+        statusMsg.textContent = data.message || "Leave applied successfully!";
+        statusMsg.classList.add("success");
+        document.getElementById("leaveForm").reset();
+        await loadLeaves();
+      } catch (err) {
+        statusMsg.textContent = "Server unreachable. Start the backend on port 5000.";
+        statusMsg.classList.add("error");
+      }
+    });
+
+    loadLeaves();
+  </script>
+</body>
+</html>
+

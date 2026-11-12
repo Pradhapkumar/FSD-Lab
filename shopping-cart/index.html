@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping Cart</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <div class="logo">ShopCart</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="cart.html">Cart 🛒 <span id="cart-count">0</span></a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>Welcome to ShopCart</h1>
+    <p>Find the products you love at the best prices.</p>
+  </section>
+
+  <section class="products-section">
+    <h2>Our Products</h2>
+    <div class="search-box">
+      <input
+        type="text"
+        id="search"
+        placeholder="Search products..."
+        onkeyup="searchProducts()"
+      >
+    </div>
+    <div id="product-list" class="product-container"></div>
+  </section>
+
+  <script src="js/products.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
+

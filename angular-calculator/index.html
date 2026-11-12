@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="calculatorApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AngularJS Calculator</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body ng-controller="CalculatorController">
+  <div class="calculator">
+    <h2>Calculator</h2>
+    <input
+      type="text"
+      class="display"
+      ng-model="display"
+      readonly
+    >
+    <div class="buttons">
+      <button type="button" ng-click="clear()">C</button>
+      <button type="button" ng-click="delete()">&#9003;</button>
+      <button type="button" ng-click="append('%')">%</button>
+      <button type="button" class="operator" ng-click="append('/')">&divide;</button>
+
+      <button type="button" ng-click="append('7')">7</button>
+      <button type="button" ng-click="append('8')">8</button>
+      <button type="button" ng-click="append('9')">9</button>
+      <button type="button" class="operator" ng-click="append('*')">&times;</button>
+
+      <button type="button" ng-click="append('4')">4</button>
+      <button type="button" ng-click="append('5')">5</button>
+      <button type="button" ng-click="append('6')">6</button>
+      <button type="button" class="operator" ng-click="append('-')">&minus;</button>
+
+      <button type="button" ng-click="append('1')">1</button>
+      <button type="button" ng-click="append('2')">2</button>
+      <button type="button" ng-click="append('3')">3</button>
+      <button type="button" class="operator" ng-click="append('+')">+</button>
+
+      <button type="button" class="zero" ng-click="append('0')">0</button>
+      <button type="button" ng-click="append('.')">.</button>
+      <button type="button" class="equal" ng-click="calculate()">=</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
+
